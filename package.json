@@ -1,0 +1,26 @@
+{
+  "name": "vue3-sortable",
+  "version": "0.0.1",
+  "description": "Vue 3 sortable lists",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CovorSorin/vue3-sortable.git"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "sortable",
+    "list",
+    "draggable"
+  ],
+  "author": "Sorin Covor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CovorSorin/vue3-sortable/issues"
+  },
+  "homepage": "https://github.com/CovorSorin/vue3-sortable#readme"
+}
