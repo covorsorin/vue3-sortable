@@ -1,10 +1,30 @@
 {
   "name": "vue3-sortable",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vue 3 sortable lists",
-  "main": "index.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/vue3-sortable-lib.umd.cjs",
+  "module": "./dist/vue3-sortable-lib.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue3-sortable-lib.js",
+      "require": "./dist/vue3-sortable-lib.umd.cjs"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.29"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.1"
   },
   "repository": {
     "type": "git",
