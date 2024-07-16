@@ -14,10 +14,12 @@ const items = ref(Array.from(Array(20).keys()).map(index => ({
 <template>
   <AppSortable
     v-model="items"
-    class="container"
+    class="sortable"
+    item-class="item"
+    direction="vertical"
   >
     <template #item="{ item }">
-      <div class="item">
+      <div>
         <div class="handle" :style="{ backgroundColor: item.color }"></div>
         <div>{{ item.name }}</div>
       </div>
@@ -25,29 +27,33 @@ const items = ref(Array.from(Array(20).keys()).map(index => ({
   </AppSortable>
 </template>
 
-<style scoped>
-.container {
+<style>
+.sortable {
+  width: 400px;
   height: 600px;
-  overflow: scroll;
+  overflow-y: scroll;
+}
+
+.item {
+  cursor: pointer;
+  user-select: none;
+  padding: 10px;
+  border: 1px solid #2C3E50;
+  background: #111;
+}
+
+.item > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .handle {
+  cursor: move;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
-}
-
-.item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid #444;
-  width: 200px;
-  background: #111;
-}
-
-.item:hover {
-  cursor: pointer;
 }
 </style>

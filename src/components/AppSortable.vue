@@ -91,7 +91,10 @@ function getStyle(index) {
   }
 
   if (index == initialIndex.value) {
-    return {}
+    return {
+      position: 'relative',
+      zIndex: 1000
+    }
   }
 
   const style = {
@@ -143,7 +146,6 @@ function onDragStart(event, item, index) {
   sortableWidth.value = sortableRef.value.scrollWidth
 
   target = event.currentTarget
-  target.classList.add('active')
 
   if (props.autosScrollEnabled) {
     animationRequest = requestAnimationFrame(animate)
@@ -170,7 +172,6 @@ function onDragStop() {
   document.removeEventListener('touchmove', onDrag)
   document.removeEventListener('touchend', onDragStop)
 
-  target.classList.remove('active')
   target.style.transform = ''
   target = null
 
@@ -271,11 +272,3 @@ function autosScroll() {
   moveTarget()
 }
 </script>
-
-<style scoped>
-/*noinspection CssUnusedSymbol*/
-.active {
-  background: #000;
-  z-index: 1000;
-}
-</style>

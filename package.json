@@ -1,7 +1,7 @@
 {
   "name": "vue3-sortable",
-  "version": "0.0.2",
-  "description": "Vue 3 sortable lists",
+  "version": "0.1.0",
+  "description": "Vue 3 sortable lists.",
   "type": "module",
   "files": [
     "dist"
@@ -19,10 +19,8 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "vue": "^3.4.29"
-  },
   "devDependencies": {
+    "vue": "^3.4.29",
     "@vitejs/plugin-vue": "^5.0.5",
     "vite": "^5.3.1"
   },
@@ -34,8 +32,9 @@
     "vue",
     "vue3",
     "sortable",
-    "list",
-    "draggable"
+    "draggable",
+    "reordable",
+    "list"
   ],
   "author": "Sorin Covor",
   "license": "MIT",
