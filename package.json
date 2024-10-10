@@ -1,7 +1,7 @@
 {
   "name": "vue3-sortable",
   "version": "0.1.0",
-  "description": "Vue 3 sortable lists.",
+  "description": "Vue 3 sortable lists",
   "type": "module",
   "files": [
     "dist"
@@ -20,9 +20,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vue": "^3.4.29",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "vite": "^5.3.1"
+    "@vitejs/plugin-vue": "^5.1.4",
+    "vite": "^5.4.8",
+    "vue": "^3.5.11"
   },
   "repository": {
     "type": "git",
