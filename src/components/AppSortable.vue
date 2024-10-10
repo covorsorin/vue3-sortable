@@ -1,5 +1,8 @@
 <template>
-  <div ref="sortableRef">
+  <div
+    ref="sortableRef"
+    @wheel="onWheel"
+  >
     <div
       v-for="(item, index) in items"
       :key="`item-${index}`"
@@ -80,6 +83,12 @@ const scrollIndex = ref(null)
 
 let target = null
 let animationRequest = null
+
+function onWheel(event) {
+  if (isDragging.value) {
+    event.preventDefault()
+  }
+}
 
 const transitionStyle = computed(() => ({
   transition: `transform ${props.animationDuration}ms ${props.animationEasing}`
