@@ -18,7 +18,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { clamp } from '../modules/utils/mouse.js'
+import { clamp, getEventPosition } from '../modules/utils/mouse.js'
 import { getRelativeEventPosition } from '../modules/utils/mouse.js'
 import { hasClassUpToParent, isBetween, moveArrayElement } from '../modules/utils/utils.js'
 
@@ -83,6 +83,10 @@ const scrollIndex = ref(null)
 
 let target = null
 let animationRequest = null
+
+// Relative to the viewport.
+let initialDragPosition = null
+let currentDragPosition = null
 
 function onWheel(event) {
   if (isDragging.value) {
@@ -160,12 +164,15 @@ function onDragStart(event, item, index) {
     animationRequest = requestAnimationFrame(animate)
   }
 
+  initialDragPosition = getEventPosition(event)
+
   onDrag(event)
 
   emits('start', { index })
 }
 
 function onDrag(event) {
+  currentDragPosition = getEventPosition(event)
   const { x, y } = getRelativeEventPosition(event, sortableRef.value)
   const size = isVertical.value ? target.offsetHeight : target.offsetWidth
   const padding = size / 2
@@ -268,6 +275,16 @@ function autosScroll() {
     acceleration = 1 - clamp(relativeCoordinate - padding, 0, SCROLL_MARGIN) / SCROLL_MARGIN
     direction = -1
   } else {
+    return
+  }
+
+  const dragDelta = isVertical.value
+    ? currentDragPosition.y - initialDragPosition.y
+    : currentDragPosition.x - initialDragPosition.x
+
+  const dragDirection = dragDelta > 0 ? 1 : -1
+
+  if (Math.abs(dragDelta) < 5 || dragDirection != direction) {
     return
   }
 
