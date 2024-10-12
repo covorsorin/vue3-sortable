@@ -1,6 +1,6 @@
 {
   "name": "vue3-sortable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vue 3 sortable lists",
   "type": "module",
   "files": [
@@ -23,6 +23,9 @@
     "@vitejs/plugin-vue": "^5.1.4",
     "vite": "^5.4.8",
     "vue": "^3.5.11"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
   },
   "repository": {
     "type": "git",
