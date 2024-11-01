@@ -1,12 +1,13 @@
 {
   "name": "vue3-sortable",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vue 3 sortable lists",
   "type": "module",
   "files": [
     "dist"
   ],
   "main": "./dist/vue3-sortable-lib.umd.cjs",
+  "types": "./dist/vue3-sortable-lib.umd.cjs",
   "module": "./dist/vue3-sortable-lib.js",
   "exports": {
     ".": {
