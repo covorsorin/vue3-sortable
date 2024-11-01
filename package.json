@@ -1,18 +1,21 @@
 {
   "name": "vue3-sortable",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Vue 3 sortable lists",
   "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/vue3-sortable-lib.umd.cjs",
-  "types": "./dist/vue3-sortable-lib.umd.cjs",
-  "module": "./dist/vue3-sortable-lib.js",
   "exports": {
     ".": {
-      "import": "./dist/vue3-sortable-lib.js",
-      "require": "./dist/vue3-sortable-lib.umd.cjs"
+      "import": {
+        "types": "./dist/vue3-sortable-lib.js",
+        "default": "./dist/vue3-sortable-lib.js"
+      },
+      "require": {
+        "types": "./dist/vue3-sortable-lib.umd.cjs",
+        "default": "./dist/vue3-sortable-lib.umd.cjs"
+      }
     }
   },
   "scripts": {
