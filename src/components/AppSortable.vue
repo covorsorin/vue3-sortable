@@ -3,16 +3,21 @@
     ref="sortableRef"
     @wheel="onWheel"
   >
-    <div
-      v-for="(item, index) in items"
-      :key="`item-${index}`"
-      :style="styles[index]"
-      :class="itemClass"
-      @mousedown="onDragStart($event, item, index)"
-      @touchstart="onDragStart($event, item, index)"
+    <TransitionGroup
+      :name="transitionGroupName"
+      tag="div"
     >
-      <slot name="item" :item="item" :index="index" />
-    </div>
+      <div
+        v-for="(item, index) in items"
+        :key="itemKey(item, index)"
+        :style="styles[index]"
+        :class="itemClass"
+        @mousedown="onDragStart($event, item, index)"
+        @touchstart="onDragStart($event, item, index)"
+      >
+        <slot name="item" :item="item" :index="index" />
+      </div>
+    </TransitionGroup>
   </div>
 </template>
 
@@ -50,6 +55,14 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  transitionGroupName: {
+    type: String,
+    default: null
+  },
+  itemKey: {
+    type: Function,
+    default: (item, index) => `index-${index}`
   }
 })
 
