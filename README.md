@@ -74,8 +74,22 @@ Type: `Boolean`<br>
 Required: `false`<br>
 Default: `true`<br>
 
-Disable the sortable.
+### transitionGroupName
+Type: `String`<br>
+Required: `false`<br>
+Default: `null`<br>
 
+The name of the transition used for the TransitionGroup that is wrapping the list.
+
+### itemKey
+Type: `Function`<br>
+Required: `false`<br>
+
+Customize the elements `key`.
+
+```javascript
+(item, index) => `item-${item.id}`
+```
 ## Emits
 
 ### update:modelValue
