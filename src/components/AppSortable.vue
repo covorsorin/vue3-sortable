@@ -5,7 +5,6 @@
   >
     <TransitionGroup
       :name="transitionGroupName"
-      tag="div"
     >
       <div
         v-for="(item, index) in items"
