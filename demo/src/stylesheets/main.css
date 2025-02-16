@@ -1,0 +1,73 @@
+.sortable-vertical {
+    width: 400px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.sortable-horizontal {
+    display: flex;
+    height: 180px;
+    width: 800px;
+    max-width: 800px;
+    overflow-x: auto;
+}
+
+.sortable-horizontal .item,
+.sortable-vertical .item {
+    cursor: pointer;
+    user-select: none;
+    padding: 10px;
+    border: 1px solid #2C3E50;
+    background: #111;
+}
+
+.sortable-horizontal .item {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.sortable-vertical .item > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sortable-horizontal .item > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.handle {
+    cursor: move;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.scale-x-enter-active, .scale-x-leave-active,
+.scale-y-enter-active, .scale-y-leave-active {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.scale-y-enter-from {
+    opacity: 0;
+    transform: scaleY(0);
+}
+
+.scale-y-leave-to {
+    opacity: 0;
+    transform: scaleY(0);
+}
+
+.scale-x-enter-from {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.scale-x-leave-to {
+    opacity: 0;
+    transform: scaleX(0);
+}

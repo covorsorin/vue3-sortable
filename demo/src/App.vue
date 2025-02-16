@@ -14,84 +14,77 @@ function createItem() {
   }
 }
 
-const items = ref(Array.from(Array(5).keys()).map(index => createItem()))
-
-function addItem() {
-  items.value.push(createItem())
+function removeItem(list, index) {
+  list.splice(index, 1)
 }
 
-function addRandomItem() {
-  const index = Math.floor(Math.random() * (items.value.length + 1))
-  items.value.splice(index, 0, createItem())
+function addItem(list) {
+  list.push(createItem())
+}
+
+function addRandomItem(list) {
+  const index = Math.floor(Math.random() * (list.length + 1))
+  list.splice(index, 0, createItem())
 }
 
 function getKey(item) {
   return item.id
 }
+
+const horizontalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
+const verticalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
 </script>
 
 <template>
-  <button @click="addItem">Add an item</button>
-  <button @click="addRandomItem">Add an item in random order</button>
+  <h3>Vertical list</h3>
+
+  <div class="mb-8">
+    <button class="mr-8" @click="addItem(verticalList)">Add</button>
+    <button @click="addRandomItem(verticalList)">Add in random order</button>
+  </div>
 
   <AppSortable
-    v-model="items"
-    class="sortable"
+    v-model="verticalList"
+    class="sortable-vertical"
     item-class="item"
+    handle="handle"
     direction="vertical"
+    transition-group-name="scale-y"
+    :item-key="getKey"
+  >
+    <template #item="{ item, index }">
+      <div>
+        <div class="handle mr-8" :style="{ backgroundColor: item.color }"></div>
+        <div>{{ item.name }}</div>
+        <button @click="removeItem(verticalList, index)">Remove</button>
+      </div>
+    </template>
+  </AppSortable>
+
+  <h3>Horizontal list</h3>
+
+  <div class="mb-8">
+    <button class="mr-8" @click="addItem(horizontalList)">Add</button>
+    <button @click="addRandomItem(horizontalList)">Add in random order</button>
+  </div>
+
+  <AppSortable
+    v-model="horizontalList"
+    class="sortable-horizontal"
+    item-class="item"
+    handle="handle"
+    direction="horizontal"
     transition-group-name="scale-x"
     :item-key="getKey"
   >
-    <template #item="{ item }">
+    <template #item="{ item, index }">
       <div>
         <div class="handle" :style="{ backgroundColor: item.color }"></div>
         <div>{{ item.name }}</div>
+        <button @click="removeItem(horizontalList, index)">Remove</button>
       </div>
     </template>
   </AppSortable>
 </template>
 
-<style>
-.sortable {
-  width: 400px;
-  max-height: 400px;
-  overflow-y: scroll;
-}
-
-.item {
-  cursor: pointer;
-  user-select: none;
-  padding: 10px;
-  border: 1px solid #2C3E50;
-  background: #111;
-}
-
-.item > div {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.handle {
-  cursor: move;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.scale-x-enter-active, .scale-x-leave-active {
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.scale-x-enter-from {
-  opacity: 0;
-  transform: scaleX(0);
-}
-
-.scale-x-leave-to {
-  opacity: 0;
-  transform: scaleX(0);
-}
-</style>
+<style src="./stylesheets/main.css" />
