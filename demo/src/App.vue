@@ -1,8 +1,19 @@
 <script setup>
 import AppSortable from '../../src/components/AppSortable.vue'
 
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { getRandomColor } from './modules/utils/utils.js'
+import { scrollHorizontallyToIndex, scrollVerticallyToIndex } from './modules/utils/scroll.js'
+
+const verticalListRef = useTemplateRef('verticalListRef')
+const horizontalListRef = useTemplateRef('horizontalListRef')
+
+const horizontalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
+const verticalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
+
+function getKey(item) {
+  return item.id
+}
 
 function createItem() {
   const id = window.crypto.randomUUID()
@@ -20,31 +31,47 @@ function removeItem(list, index) {
 
 function addItem(list) {
   list.push(createItem())
+  return list.length
 }
 
 function addRandomItem(list) {
   const index = Math.floor(Math.random() * (list.length + 1))
   list.splice(index, 0, createItem())
+  return index
 }
 
-function getKey(item) {
-  return item.id
+function addVerticalItem() {
+  const index = addItem(verticalList.value)
+  scrollVerticallyToIndex(verticalListRef.value.$el, index)
 }
 
-const horizontalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
-const verticalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
+function addRandomVerticalItem() {
+  const index = addRandomItem(verticalList.value)
+  scrollVerticallyToIndex(verticalListRef.value.$el, index)
+}
+
+function addHorizontalItem() {
+  const index = addItem(horizontalList.value)
+  scrollHorizontallyToIndex(horizontalListRef.value.$el, index)
+}
+
+function addRandomHorizontalItem() {
+  const index = addRandomItem(horizontalList.value)
+  scrollHorizontallyToIndex(horizontalListRef.value.$el, index)
+}
 </script>
 
 <template>
   <h3>Vertical list</h3>
 
   <div class="mb-8">
-    <button class="mr-8" @click="addItem(verticalList)">Add</button>
-    <button @click="addRandomItem(verticalList)">Add in random order</button>
+    <button class="mr-8" @click="addVerticalItem">Add</button>
+    <button @click="addRandomVerticalItem">Add in random order</button>
   </div>
 
   <AppSortable
     v-model="verticalList"
+    ref="verticalListRef"
     class="sortable-vertical"
     item-class="item"
     handle="handle"
@@ -64,12 +91,13 @@ const verticalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
   <h3>Horizontal list</h3>
 
   <div class="mb-8">
-    <button class="mr-8" @click="addItem(horizontalList)">Add</button>
-    <button @click="addRandomItem(horizontalList)">Add in random order</button>
+    <button class="mr-8" @click="addHorizontalItem">Add</button>
+    <button @click="addRandomHorizontalItem">Add in random order</button>
   </div>
 
   <AppSortable
     v-model="horizontalList"
+    ref="horizontalListRef"
     class="sortable-horizontal"
     item-class="item"
     handle="handle"

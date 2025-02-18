@@ -4,7 +4,7 @@ Minimal, kind-of opinionated, Vue 3 sortable list component.
 
 Developed for [Pigments](https://www.instagram.com/pigmentsapp/) app.
 
-Check out the `demo` folder.
+Check out the [demo](https://covorsorin.github.io/vue3-sortable/) and the `demo` folder.
 
 ## Slots
 
