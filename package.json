@@ -1,6 +1,6 @@
 {
   "name": "vue3-sortable",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Vue 3 sortable lists",
   "type": "module",
   "files": [

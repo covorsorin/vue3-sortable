@@ -11,10 +11,14 @@
         :key="itemKey(item, index)"
         :style="styles[index]"
         :class="itemClass"
-        @mousedown="onDragStart($event, item, index)"
-        @touchstart="onDragStart($event, item, index)"
+        @mousedown="onDragStart($event, index)"
+        @touchstart="onDragStart($event, index)"
       >
-        <slot name="item" :item="item" :index="index" />
+        <slot
+          name="item"
+          :item="item"
+          :index="index"
+        />
       </div>
     </TransitionGroup>
   </div>
@@ -92,6 +96,7 @@ const isDragging = ref(false)
 
 const initialIndex = ref(null)
 const scrollIndex = ref(null)
+const elementDragOffset = ref(0)
 
 let target = null
 let animationRequest = null
@@ -142,7 +147,7 @@ watch(scrollIndex, () => {
   emits('change', { oldIndex: initialIndex.value, newIndex: scrollIndex.value })
 })
 
-function onDragStart(event, item, index) {
+function onDragStart(event, index) {
   if (props.disabled) {
     return
   }
@@ -178,6 +183,9 @@ function onDragStart(event, item, index) {
 
   initialDragPosition = getEventPosition(event)
 
+  const { x, y } = getRelativeEventPosition(event, target)
+  elementDragOffset.value = isVertical.value ? y : x
+
   onDrag(event)
 
   emits('start', { index })
@@ -188,8 +196,14 @@ function onDrag(event) {
   const { x, y } = getRelativeEventPosition(event, sortableRef.value)
   const size = isVertical.value ? target.offsetHeight : target.offsetWidth
   const padding = size / 2
-  position.value.x = clamp(x, sortableRef.value.scrollLeft + padding, sortableRef.value.offsetWidth + sortableRef.value.scrollLeft - padding)
-  position.value.y = clamp(y, sortableRef.value.scrollTop + padding, sortableRef.value.offsetHeight + sortableRef.value.scrollTop - padding)
+
+  const offset = padding - elementDragOffset.value
+  const xOffset = isVertical.value ? 0 : offset
+  const yOffset = isVertical.value ? offset : 0
+
+  position.value.x = clamp(x + xOffset, sortableRef.value.scrollLeft + padding, sortableRef.value.offsetWidth + sortableRef.value.scrollLeft - padding)
+  position.value.y = clamp(y + yOffset, sortableRef.value.scrollTop + padding, sortableRef.value.offsetHeight + sortableRef.value.scrollTop - padding)
+
   moveTarget()
 }
 

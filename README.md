@@ -6,6 +6,8 @@ Developed for [Pigments](https://www.instagram.com/pigmentsapp/) app.
 
 Check out the [demo](https://covorsorin.github.io/vue3-sortable/) and the `demo` folder.
 
+Check out vue3-sortable on [npmjs.com](https://www.npmjs.com/package/vue3-sortable).
+
 ## Slots
 
 `#item` - Receives the v-for directive item as a prop.
