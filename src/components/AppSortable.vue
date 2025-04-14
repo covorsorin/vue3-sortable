@@ -13,6 +13,7 @@
         :class="itemClass"
         @mousedown="onDragStart($event, index)"
         @touchstart="onDragStart($event, index)"
+        @click.capture="onItemClick($event)"
       >
         <slot
           name="item"
@@ -66,6 +67,10 @@ const props = defineProps({
   itemKey: {
     type: Function,
     default: (item, index) => `index-${index}`
+  },
+  dragThreshold: {
+    type: Number,
+    default: 3
   }
 })
 
@@ -101,9 +106,19 @@ const elementDragOffset = ref(0)
 let target = null
 let animationRequest = null
 
-// Relative to the viewport.
+// These values are relative to the viewport.
 let initialDragPosition = null
 let currentDragPosition = null
+
+function getDragDelta() {
+  if (!initialDragPosition || !currentDragPosition) {
+    return 0
+  }
+
+  return isVertical.value
+    ? currentDragPosition.y - initialDragPosition.y
+    : currentDragPosition.x - initialDragPosition.x
+}
 
 function onWheel(event) {
   if (isDragging.value) {
@@ -116,7 +131,7 @@ const transitionStyle = computed(() => ({
 }))
 
 function getStyle(index) {
-  if (initialIndex.value === null) {
+  if (initialIndex.value === null || !isDragging.value) {
     return {}
   }
 
@@ -152,7 +167,7 @@ function onDragStart(event, index) {
     return
   }
 
-  // Ignore right click.
+  // Ignore right click events.
   if (event.button && event.button != 0) {
     return
   }
@@ -161,15 +176,20 @@ function onDragStart(event, index) {
     return
   }
 
-  event.preventDefault()
+  const isTouchEvent = event.type == 'touchstart'
 
-  document.addEventListener('mousemove', onDrag)
-  document.addEventListener('mouseup', onDragStop)
+  if (isTouchEvent) {
+    document.addEventListener('touchmove', onDrag, { passive: false })
+    document.addEventListener('touchend', onDragStop)
+  } else {
+    // Only prevent mouse events, otherwise click events on mobile won't register.
+    event.preventDefault()
 
-  document.addEventListener('touchmove', onDrag)
-  document.addEventListener('touchend', onDragStop)
+    document.addEventListener('mousemove', onDrag)
+    document.addEventListener('mouseup', onDragStop)
+  }
 
-  isDragging.value = true
+  isDragging.value = false
   initialIndex.value = index
 
   sortableHeight.value = sortableRef.value.scrollHeight
@@ -187,12 +207,25 @@ function onDragStart(event, index) {
   elementDragOffset.value = isVertical.value ? y : x
 
   onDrag(event)
-
-  emits('start', { index })
 }
 
 function onDrag(event) {
   currentDragPosition = getEventPosition(event)
+
+  if (event.type === 'touchmove') {
+    event.preventDefault()
+  }
+
+  if (!isDragging.value) {
+    const dragDelta = getDragDelta()
+    if (Math.abs(dragDelta) > props.dragThreshold) {
+      isDragging.value = true
+      emits('start', { index: initialIndex })
+    } else {
+      return
+    }
+  }
+
   const { x, y } = getRelativeEventPosition(event, sortableRef.value)
   const size = isVertical.value ? target.offsetHeight : target.offsetWidth
   const padding = size / 2
@@ -222,6 +255,10 @@ function onDragStop() {
     animationRequest = null
   }
 
+  if (!isDragging.value) {
+    return
+  }
+
   items.value = initialIndex.value != scrollIndex.value
     ? moveArrayElement(items.value, initialIndex.value, scrollIndex.value)
     : items.value
@@ -232,9 +269,17 @@ function onDragStop() {
     value: items.value
   })
 
-  isDragging.value = false
   initialIndex.value = null
   scrollIndex.value = null
+}
+
+function onItemClick(event) {
+  if (!isDragging.value) {
+    return
+  }
+
+  event.stopPropagation()
+  isDragging.value = false
 }
 
 function moveTarget() {
@@ -304,10 +349,7 @@ function autosScroll() {
     return
   }
 
-  const dragDelta = isVertical.value
-    ? currentDragPosition.y - initialDragPosition.y
-    : currentDragPosition.x - initialDragPosition.x
-
+  const dragDelta = getDragDelta()
   const dragDirection = dragDelta > 0 ? 1 : -1
 
   if (Math.abs(dragDelta) < 5 || dragDirection != direction) {

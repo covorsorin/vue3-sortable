@@ -16,80 +16,88 @@ Check out vue3-sortable on [npmjs.com](https://www.npmjs.com/package/vue3-sortab
 
 ### modelValue
 
->Type: `Array`<br>
->Required: `true`<br>
+> Type: `Array`<br>
+> Required: `true`<br>
 
 The list of items that need to be sorted.
 
 ### direction
 
->Type: `String`<br>
->Required: `false`<br>
->Default: `vertical`<br>
->Values: [`vertical`, `horizontal`]<br>
+> Type: `String`<br>
+> Required: `false`<br>
+> Default: `vertical`<br>
+> Values: [`vertical`, `horizontal`]<br>
 
 The direction of the sortable.
 
 ### handle
 
->Type: `String`<br>
->Required: `false`<br>
->Default: `null`<br>
+> Type: `String`<br>
+> Required: `false`<br>
+> Default: `null`<br>
 
 CSS class selector used as a drag handle. If the handle is not provided, the item can be moved from anywhere.
 
 ### itemClass
 
->Type: `String`<br>
->Required: `false`<br>
->Default: `null`<br>
+> Type: `String`<br>
+> Required: `false`<br>
+> Default: `null`<br>
 
 CSS class applied to the items.
 
 ### animationDuration
 
->Type: `Number`<br>
->Required: `false`<br>
->Default: `200`<br>
+> Type: `Number`<br>
+> Required: `false`<br>
+> Default: `200`<br>
 
 Reorder animation duration, in ms.
 
 ### animationEasing
 
->Type: `String`<br>
->Required: `false`<br>
->Default: `ease`<br>
+> Type: `String`<br>
+> Required: `false`<br>
+> Default: `ease`<br>
 
 Reorder animation easing, any CSS transition accepted.
 
 ### autosScrollEnabled
 
->Type: `Boolean`<br>
->Required: `false`<br>
->Default: `true`<br>
+> Type: `Boolean`<br>
+> Required: `false`<br>
+> Default: `true`<br>
 
 Whether to auto-scroll when near the edges of the list, when overflow is present.
 
 ### disabled
 
->Type: `Boolean`<br>
->Required: `false`<br>
->Default: `true`<br>
+> Type: `Boolean`<br>
+> Required: `false`<br>
+> Default: `true`<br>
 
 ### transitionGroupName
 
->Type: `String`<br>
->Required: `false`<br>
->Default: `null`<br>
+> Type: `String`<br>
+> Required: `false`<br>
+> Default: `null`<br>
 
 The name of the transition used for the TransitionGroup that is wrapping the list.
 
 ### itemKey
 
->Type: `Function`<br>
->Required: `false`<br>
+> Type: `Function`<br>
+> Required: `false`<br>
 
 Customize the elements `key`.
+
+## dragThreshold
+
+> Type: `Number`<br>
+> Required: `false`<br>
+> Default: `5`<br>
+
+The minimum number of pixels after it's considered a drag event.
 
 ```javascript
 (item, index) => `item-${item.id}`
