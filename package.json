@@ -1,6 +1,6 @@
 {
   "name": "vue3-sortable",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Vue 3 sortable lists",
   "type": "module",
   "files": [
@@ -22,12 +22,12 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.1.4",
-    "typescript": "^5.7.3",
-    "vite": "^5.4.14",
-    "vite-plugin-dts": "^4.5.0",
-    "vue": "^3.5.11",
-    "vue-tsc": "^2.2.0"
+    "@vitejs/plugin-vue": "^5.2.3",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.18",
+    "vite-plugin-dts": "^4.5.3",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.8"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
