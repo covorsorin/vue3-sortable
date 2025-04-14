@@ -100,7 +100,7 @@ const position = ref({
 const isDragging = ref(false)
 
 const initialIndex = ref(null)
-const scrollIndex = ref(null)
+const currentIndex = ref(null)
 const elementDragOffset = ref(0)
 
 let target = null
@@ -126,10 +126,6 @@ function onWheel(event) {
   }
 }
 
-const transitionStyle = computed(() => ({
-  transition: `transform ${props.animationDuration}ms ${props.animationEasing}`
-}))
-
 function getStyle(index) {
   if (initialIndex.value === null || !isDragging.value) {
     return {}
@@ -143,12 +139,12 @@ function getStyle(index) {
   }
 
   const style = {
-    ...transitionStyle.value,
+    transition: `transform ${props.animationDuration}ms ${props.animationEasing}`,
     transform: 'translate3d(0, 0, 0)'
   }
 
-  if (isBetween(index, initialIndex.value, scrollIndex.value)) {
-    const transform = (initialIndex.value - scrollIndex.value < 0) ? '-100%' : '100%'
+  if (isBetween(index, initialIndex.value, currentIndex.value)) {
+    const transform = (initialIndex.value - currentIndex.value < 0) ? '-100%' : '100%'
     const transformX = isVertical.value ? 0 : transform
     const transformY = isVertical.value ? transform : 0
     style.transform = `translate3d(${transformX}, ${transformY}, 0)`
@@ -157,9 +153,9 @@ function getStyle(index) {
   return style
 }
 
-watch(scrollIndex, () => {
+watch(currentIndex, () => {
   styles.value = items.value.map((item, index) => getStyle(index))
-  emits('change', { oldIndex: initialIndex.value, newIndex: scrollIndex.value })
+  emits('change', { oldIndex: initialIndex.value, newIndex: currentIndex.value })
 })
 
 function onDragStart(event, index) {
@@ -259,18 +255,18 @@ function onDragStop() {
     return
   }
 
-  items.value = initialIndex.value != scrollIndex.value
-    ? moveArrayElement(items.value, initialIndex.value, scrollIndex.value)
+  items.value = initialIndex.value != currentIndex.value
+    ? moveArrayElement(items.value, initialIndex.value, currentIndex.value)
     : items.value
 
   emits('end', {
     oldIndex: initialIndex.value,
-    newIndex: scrollIndex.value,
+    newIndex: currentIndex.value,
     value: items.value
   })
 
   initialIndex.value = null
-  scrollIndex.value = null
+  currentIndex.value = null
 }
 
 function onItemClick(event) {
@@ -286,7 +282,7 @@ function moveTarget() {
   const size = isVertical.value ? target.offsetHeight : target.offsetWidth
   const coordinate = isVertical.value ? position.value.y : position.value.x
 
-  scrollIndex.value = Math.floor(coordinate / size)
+  currentIndex.value = Math.floor(coordinate / size)
 
   const transform = coordinate - size * initialIndex.value - size / 2
   const transformX = isVertical.value ? 0 : transform
