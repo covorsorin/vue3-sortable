@@ -177,6 +177,7 @@ function onDragStart(event, index) {
   if (isTouchEvent) {
     document.addEventListener('touchmove', onDrag, { passive: false })
     document.addEventListener('touchend', onDragStop)
+    document.addEventListener('touchcancel', onDragStop)
   } else {
     // Only prevent mouse events, otherwise click events on mobile won't register.
     event.preventDefault()
@@ -242,6 +243,7 @@ function onDragStop() {
 
   document.removeEventListener('touchmove', onDrag)
   document.removeEventListener('touchend', onDragStop)
+  document.removeEventListener('touchcancel', onDragStop)
 
   target.style.transform = ''
   target = null
