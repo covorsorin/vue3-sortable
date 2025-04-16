@@ -34,7 +34,8 @@ import { hasClassUpToParent, isBetween, moveArrayElement } from '../modules/util
 const props = defineProps({
   direction: {
     type: String,
-    default: 'vertical'
+    default: 'vertical',
+    validator: (value) => ['vertical', 'horizontal'].includes(value)
   },
   handle: {
     type: String,
