@@ -1,9 +1,16 @@
 <script setup>
 import AppSortable from '../../src/components/AppSortable.vue'
 
-import { ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import { getRandomColor } from './modules/utils/utils.js'
 import { scrollHorizontallyToIndex, scrollVerticallyToIndex } from './modules/utils/scroll.js'
+
+const useHandle = ref(false)
+const handle = computed(() => useHandle.value ? 'handle' : null)
+
+function toggleHandle() {
+  useHandle.value = !useHandle.value
+}
 
 const verticalListRef = useTemplateRef('verticalListRef')
 const horizontalListRef = useTemplateRef('horizontalListRef')
@@ -62,6 +69,11 @@ function addRandomHorizontalItem() {
 </script>
 
 <template>
+  <div>
+    <span class="mr-8">Use handle</span>
+    <button @click="toggleHandle">{{ useHandle ? 'Yes' : 'No' }}</button>
+  </div>
+
   <h3>Vertical list</h3>
 
   <div class="mb-8">
@@ -74,7 +86,7 @@ function addRandomHorizontalItem() {
     ref="verticalListRef"
     class="sortable-vertical"
     item-class="item"
-    handle="handle"
+    :handle="handle"
     direction="vertical"
     transition-group-name="scale-y"
     :item-key="getKey"
@@ -100,7 +112,7 @@ function addRandomHorizontalItem() {
     ref="horizontalListRef"
     class="sortable-horizontal"
     item-class="item"
-    handle="handle"
+    :handle="handle"
     direction="horizontal"
     transition-group-name="scale-x"
     :item-key="getKey"
