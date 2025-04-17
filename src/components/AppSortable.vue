@@ -194,17 +194,10 @@ function onDragStart(event, index) {
   sortableWidth.value = sortableRef.value.scrollWidth
 
   target = event.currentTarget
-
-  if (props.autosScrollEnabled) {
-    animationRequest = requestAnimationFrame(animate)
-  }
-
   initialDragPosition = getEventPosition(event)
 
   const { x, y } = getRelativeEventPosition(event, target)
   elementDragOffset.value = isVertical.value ? y : x
-
-  onDrag(event)
 }
 
 function onDrag(event) {
@@ -216,8 +209,15 @@ function onDrag(event) {
 
   if (!isDragging.value) {
     const dragDelta = getDragDelta()
+
+    // This is where the drag event starts.
     if (Math.abs(dragDelta) > props.dragThreshold) {
       isDragging.value = true
+
+      if (props.autosScrollEnabled) {
+        animationRequest = requestAnimationFrame(animate)
+      }
+
       emits('start', { index: initialIndex })
     } else {
       return
@@ -246,13 +246,10 @@ function onDragStop() {
   document.removeEventListener('touchend', onDragStop)
   document.removeEventListener('touchcancel', onDragStop)
 
+  cancelAutoScroll()
+
   target.style.transform = ''
   target = null
-
-  if (animationRequest) {
-    cancelAnimationFrame(animationRequest)
-    animationRequest = null
-  }
 
   if (!isDragging.value) {
     return
@@ -308,8 +305,16 @@ function animate(timestamp) {
   animationRequest = requestAnimationFrame(animate)
 }
 
+function cancelAutoScroll() {
+  if (animationRequest) {
+    cancelAnimationFrame(animationRequest)
+    animationRequest = null
+  }
+}
+
 function autosScroll() {
-  if (!isDragging.value) {
+  if (!isDragging.value || !target) {
+    cancelAutoScroll()
     return
   }
 
