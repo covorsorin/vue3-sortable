@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="sortableRef"
+    ref="sortable"
     @wheel="onWheel"
   >
     <TransitionGroup
@@ -83,7 +83,7 @@ const isVertical = computed(() => props.direction == 'vertical')
 
 const styles = ref(items.value.map(() => ({})))
 
-const sortableRef = useTemplateRef('sortableRef')
+const sortableRef = useTemplateRef('sortable')
 
 const sortableHeight = ref(0)
 const sortableWidth = ref(0)
