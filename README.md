@@ -62,14 +62,6 @@ Reorder animation duration, in ms.
 
 Reorder animation easing, any CSS transition accepted.
 
-### autosScrollEnabled
-
-> Type: `Boolean`<br>
-> Required: `false`<br>
-> Default: `true`<br>
-
-Whether to auto-scroll when near the edges of the list, when overflow is present.
-
 ### disabled
 
 > Type: `Boolean`<br>
