@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, useTemplateRef, watch } from 'vue'
 import { clamp, getEventPosition } from '../modules/utils/mouse.js'
 import { getRelativeEventPosition } from '../modules/utils/mouse.js'
 import { hasClassUpToParent, isBetween, moveArrayElement } from '../modules/utils/utils.js'
@@ -83,7 +83,7 @@ const isVertical = computed(() => props.direction == 'vertical')
 
 const styles = ref(items.value.map(() => ({})))
 
-const sortableRef = ref(null)
+const sortableRef = useTemplateRef('sortableRef')
 
 const sortableHeight = ref(0)
 const sortableWidth = ref(0)
