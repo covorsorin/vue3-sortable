@@ -8,7 +8,7 @@
     >
       <div
         v-for="(item, index) in items"
-        :key="itemKey(item, index)"
+        :key="itemKeys[index]"
         :style="styles[index]"
         :class="itemClass"
         @mousedown="onDragStart($event, index)"
@@ -78,6 +78,10 @@ const emits = defineEmits([
 ])
 
 const items = defineModel()
+
+const itemKeys = computed(() => {
+  return items.value.map((item, index) => props.itemKey(item, index))
+})
 
 const isVertical = computed(() => props.direction == 'vertical')
 
