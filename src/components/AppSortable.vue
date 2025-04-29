@@ -37,11 +37,23 @@ const props = defineProps({
     default: 'vertical',
     validator: (value) => ['vertical', 'horizontal'].includes(value)
   },
+  itemKey: {
+    type: [Function, String],
+    required: true
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
   handle: {
     type: String,
     default: null
   },
   itemClass: {
+    type: String,
+    default: null
+  },
+  transitionGroupName: {
     type: String,
     default: null
   },
@@ -52,18 +64,6 @@ const props = defineProps({
   animationEasing: {
     type: String,
     default: 'ease'
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  transitionGroupName: {
-    type: String,
-    default: null
-  },
-  itemKey: {
-    type: Function,
-    default: (item, index) => `index-${index}`
   },
   dragThreshold: {
     type: Number,
@@ -88,7 +88,11 @@ const emits = defineEmits([
 const items = defineModel()
 
 const itemKeys = computed(() => {
-  return items.value.map((item, index) => props.itemKey(item, index))
+  return items.value.map((item, index) => {
+    return (typeof props.itemKey === 'function')
+      ? props.itemKey(item, index)
+      : item[props.itemKey]
+  })
 })
 
 const isVertical = computed(() => props.direction == 'vertical')

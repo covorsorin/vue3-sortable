@@ -89,7 +89,7 @@ function addRandomHorizontalItem() {
     :handle="handle"
     direction="vertical"
     transition-group-name="scale-y"
-    :item-key="getKey"
+    item-key="id"
   >
     <template #item="{ item, index }">
       <div>
