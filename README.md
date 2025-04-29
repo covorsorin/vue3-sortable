@@ -14,86 +14,21 @@ Check out vue3-sortable on [npmjs.com](https://www.npmjs.com/package/vue3-sortab
 
 ## Props
 
-### modelValue
-
-> Type: `Array`<br>
-> Required: `true`<br>
-
-The list of items that need to be sorted.
-
-### direction
-
-> Type: `String`<br>
-> Required: `false`<br>
-> Default: `vertical`<br>
-> Values: [`vertical`, `horizontal`]<br>
-
-The direction of the sortable.
-
-### handle
-
-> Type: `String`<br>
-> Required: `false`<br>
-> Default: `null`<br>
-
-CSS class selector used as a drag handle. If the handle is not provided, the item can be moved from anywhere.
-
-### itemClass
-
-> Type: `String`<br>
-> Required: `false`<br>
-> Default: `null`<br>
-
-CSS class applied to the items.
-
-### animationDuration
-
-> Type: `Number`<br>
-> Required: `false`<br>
-> Default: `200`<br>
-
-Reorder animation duration, in ms.
-
-### animationEasing
-
-> Type: `String`<br>
-> Required: `false`<br>
-> Default: `ease`<br>
-
-Reorder animation easing, any CSS transition accepted.
-
-### disabled
-
-> Type: `Boolean`<br>
-> Required: `false`<br>
-> Default: `true`<br>
-
-### transitionGroupName
-
-> Type: `String`<br>
-> Required: `false`<br>
-> Default: `null`<br>
-
-The name of the transition used for the TransitionGroup that is wrapping the list.
-
-### itemKey
-
-> Type: `Function`<br>
-> Required: `false`<br>
-
-Customize the elements `key`.
-
-## dragThreshold
-
-> Type: `Number`<br>
-> Required: `false`<br>
-> Default: `5`<br>
-
-The minimum number of pixels after it's considered a drag event.
-
-```javascript
-(item, index) => `item-${item.id}`
-```
+| Prop                 | Type               | Required | Default      | Description                                                                                                                                                                             |
+| -------------------- | ------------------ | -------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| modelValue           | Array              | Yes      |              | The list of items that need to be sorted.                                                                                                                                               |
+| direction            | String             | No       | `'vertical'` | The direction of the sortable (`'vertical'` or `'horizontal'`).                                                                                                                         |
+| itemKey              | Function \| String | Yes      |              | The unique key used to identify each element from the list. It can be a function which receives the `item` and `index` as parameters or a string representing a key on the item object. |
+| disabled             | Boolean            | No       | `false`      | Whether to disable the component.                                                                                                                                                       |
+| handle               | String             | No       | `null`       | CSS class selector used as a drag handle. If the handle is not provided, the item can be moved from anywhere.                                                                           |
+| itemClass            | String             | No       | `null`       | CSS class applied to the items.                                                                                                                                                         |
+| transitionGroupName  | String             | No       | `null`       | The name of the transition used for the `TransitionGroup` that is wrapping the list.                                                                                                    |
+| animationDuration    | Number             | No       | `200`        | Reorder animation duration, in milliseconds.                                                                                                                                            |
+| animationEasing      | String             | No       | `'ease'`     | Reorder animation easing.                                                                                                                                                               |
+| dragThreshold        | Number             | No       | `3`          | The minimum number of pixels after it's considered a drag event.                                                                                                                        |
+| dragDelay            | Number             | No       | `150`        | The time in milliseconds after the event is registered as a drag.                                                                                                                       |
+| dragDelayOnTouchOnly | Boolean            | No       | `true`       | Whether the `dragDelay` prop should apply only on mobile devices.                                                                                                                       |
+| autoScroll           | Boolean            | No       | `true`       | Whether to auto-scroll when dragging an item near the edges.                                                                                                                            |
 
 ## Emits
 
