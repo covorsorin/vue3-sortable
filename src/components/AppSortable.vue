@@ -221,7 +221,7 @@ function onDragStart(event, index) {
 }
 
 function onDrag(event) {
-  if (props.dragDelayOnTouchOnly ? isTouchEvent : true) {
+  if (props.dragDelay && props.dragDelayOnTouchOnly ? isTouchEvent : true) {
     const timeDelta = performance.now() - startedDragAt
     const isTimeThresholdExceeded = timeDelta > props.dragDelay
     if (!isTimeThresholdExceeded) {
