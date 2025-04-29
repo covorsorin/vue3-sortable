@@ -76,6 +76,10 @@ const props = defineProps({
   dragDelayOnTouchOnly: {
     type: Boolean,
     default: true
+  },
+  autoScroll: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -117,7 +121,7 @@ const currentIndex = ref(null)
 const elementDragOffset = ref(0)
 
 let target = null
-let animationRequest = null
+let autoScrollAnimationRequest = null
 
 // These values are relative to the viewport.
 let initialDragPosition = null
@@ -240,7 +244,7 @@ function onDrag(event) {
     // This is where the drag event is triggered.
     if (isDragThresholdExceeded) {
       isDragging.value = true
-      animationRequest = requestAnimationFrame(animate)
+      autoScrollAnimationRequest = requestAnimationFrame(animateAutoScroll)
       emits('start', { index: initialIndex })
     } else {
       return
@@ -318,10 +322,10 @@ function moveTarget() {
 
 let previousAutoScrollTimestamp = 0
 
-function animate(timestamp) {
-  if (!isDragging.value) {
-    cancelAnimationFrame(animationRequest)
-    animationRequest = null
+function animateAutoScroll(timestamp) {
+  if (!isDragging.value || !props.autoScroll) {
+    cancelAnimationFrame(autoScrollAnimationRequest)
+    autoScrollAnimationRequest = null
     return
   }
 
@@ -332,7 +336,7 @@ function animate(timestamp) {
     previousAutoScrollTimestamp = timestamp
   }
 
-  animationRequest = requestAnimationFrame(animate)
+  autoScrollAnimationRequest = requestAnimationFrame(animateAutoScroll)
 }
 
 function autosScroll() {
