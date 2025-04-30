@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, ref, useTemplateRef, watch } from 'vue'
+import { computed, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { clamp, getEventPosition } from '../modules/utils/mouse.js'
 import { getRelativeEventPosition } from '../modules/utils/mouse.js'
 import { hasClassUpToParent, isBetween, moveArrayElement } from '../modules/utils/utils.js'
@@ -390,4 +390,8 @@ function autosScroll() {
   position.value.y = clamp(position.value.y + yScrollOffset, sortableRef.value.scrollTop + padding, sortableRef.value.offsetHeight + sortableRef.value.scrollTop - padding)
   moveTarget()
 }
+
+onUnmounted(() => {
+  cancelAnimationFrame(autoScrollAnimationRequest)
+})
 </script>
