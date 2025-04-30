@@ -331,15 +331,16 @@ function animateAutoScroll(timestamp) {
 
   const elapsed = timestamp - previousAutoScrollTimestamp
 
-  if (elapsed >= 10) {
-    autosScroll()
+  // Target ~60fps (1000ms/60 ≈ 16.67ms).
+  if (elapsed >= 16) {
+    autoScroll()
     previousAutoScrollTimestamp = timestamp
   }
 
   autoScrollAnimationRequest = requestAnimationFrame(animateAutoScroll)
 }
 
-function autosScroll() {
+function autoScroll() {
   const size = isVertical.value ? target.offsetHeight : target.offsetWidth
   const padding = size / 2
 
