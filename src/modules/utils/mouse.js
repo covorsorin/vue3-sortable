@@ -27,3 +27,21 @@ export function getRelativeEventPosition(event, element) {
     position.y = clamp(position.y + element.scrollTop - rect.top, 0, element.scrollHeight)
     return position
 }
+
+export function getVisibleRelativeEventPosition(event, element, parent) {
+    const position = getRelativeEventPosition(event, element)
+
+    const elementRect = element.getBoundingClientRect()
+    const parentRect = parent.getBoundingClientRect()
+
+    const leftVisible = Math.max(parentRect.left, elementRect.left)
+    const xOffset = Math.max(element.offsetWidth - (elementRect.right - leftVisible), 0)
+
+    const topVisible = Math.max(parentRect.top, elementRect.top)
+    const yOffset = Math.max(element.offsetHeight - (elementRect.bottom - topVisible), 0)
+
+    position.x = position.x - xOffset
+    position.y = position.y - yOffset
+
+    return position
+}

@@ -15,8 +15,8 @@ function toggleHandle() {
 const verticalListRef = useTemplateRef('verticalListRef')
 const horizontalListRef = useTemplateRef('horizontalListRef')
 
-const horizontalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
-const verticalList = ref(Array.from(Array(5).keys()).map(index => createItem()))
+const horizontalList = ref(Array.from(Array(10).keys()).map(index => createItem()))
+const verticalList = ref(Array.from(Array(10).keys()).map(index => createItem()))
 
 function getKey(item) {
   return item.id
@@ -81,24 +81,29 @@ function addRandomHorizontalItem() {
     <button @click="addRandomVerticalItem">Add in random order</button>
   </div>
 
-  <AppSortable
-    v-model="verticalList"
-    ref="verticalListRef"
-    class="sortable-vertical"
-    item-class="item"
-    :handle="handle"
-    direction="vertical"
-    transition-group-name="scale-y"
-    item-key="id"
-  >
-    <template #item="{ item, index }">
-      <div>
-        <div class="handle mr-8" :style="{ backgroundColor: item.color }"></div>
-        <div>{{ item.name }}</div>
-        <button @click="removeItem(verticalList, index)">Remove</button>
-      </div>
-    </template>
-  </AppSortable>
+  <div style="position: relative">
+    <AppSortable
+      v-model="verticalList"
+      ref="verticalListRef"
+      class="sortable-vertical"
+      item-class="item"
+      :handle="handle"
+      direction="vertical"
+      transition-group-name="scale-y"
+      item-key="id"
+    >
+      <template #item="{ item, index }">
+        <div>
+          <div class="handle mr-8" :style="{ backgroundColor: item.color }"></div>
+          <div>{{ item.name }}</div>
+          <button @click="removeItem(verticalList, index)">Remove</button>
+        </div>
+      </template>
+    </AppSortable>
+
+    <div v-if="false" style="position: absolute; top: 0; width: 100%; height: 50px; background: red; opacity: 0.3"></div>
+    <div v-if="false" style="position: absolute; bottom: 0; width: 100%; height: 50px; background: red; opacity: 0.3"></div>
+  </div>
 
   <h3>Horizontal list</h3>
 
