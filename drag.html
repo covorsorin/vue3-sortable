@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Scroll Example</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #scroll-container {
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            position: relative;
+            background-color: #f0f0f0;
+        }
+
+        .content {
+            height: 200vh; /* Tall content to allow scrolling */
+            padding: 20px;
+        }
+
+        #draggable {
+            width: 100px;
+            height: 100px;
+            background-color: #3498db;
+            border-radius: 8px;
+            position: absolute;
+            touch-action: none;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="scroll-container">
+        <div class="content">
+            <h1>Drag and Scroll Demo</h1>
+
+            <div class="section">
+                <h2>Scrollable Content</h2>
+                <p>Scroll this page normally. You can also drag the blue box around.</p>
+            </div>
+
+            <div class="section">
+                <h2>How it works</h2>
+                <p>This demo differentiates between drag and scroll intentions based on:</p>
+                <ul>
+                    <li>Movement direction (vertical vs horizontal)</li>
+                    <li>Distance threshold</li>
+                    <li>Velocity of movement</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>More content</h2>
+                <p>Scroll down to see more content...</p>
+            </div>
+
+            <div class="section">
+                <h2>Bottom content</h2>
+                <p>You've scrolled to the bottom!</p>
+            </div>
+        </div>
+
+        <div id="draggable">Drag Me</div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const draggable = document.getElementById('draggable');
+        const container = document.getElementById('scroll-container');
+
+        // Initial position of draggable element
+        draggable.style.left = '50px';
+        draggable.style.top = '150px';
+
+        let isDragging = false;
+        let startX, startY;
+        let offsetX = 0, offsetY = 0;
+
+        // Movement thresholds
+        const DRAG_THRESHOLD = 10; // pixels
+        const TIME_THRESHOLD = 300; // milliseconds
+        const SCROLL_BIAS = 1.5; // How much vertical movement gets prioritized as scroll
+
+        // Track touch metrics
+        let touchStartTime;
+        let lastTouchX, lastTouchY;
+        let velocityX = 0, velocityY = 0;
+        let isScrolling = false;
+
+        // Touch event handlers
+        draggable.addEventListener('touchstart', handleTouchStart, { passive: false });
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+        function handleTouchStart(e) {
+            // Get initial positions
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            lastTouchX = startX;
+            lastTouchY = startY;
+
+            // Get current element position
+            const style = window.getComputedStyle(draggable);
+            offsetX = parseInt(style.left) || 0;
+            offsetY = parseInt(style.top) || 0;
+
+            // Mark as potentially dragging and record time
+            isDragging = true;
+            isScrolling = false;
+            touchStartTime = new Date().getTime();
+
+            // Prevent default only if we're directly on the element
+            if (e.target === draggable) {
+                e.preventDefault();
+            }
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging) return;
+
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+
+            // Calculate movement deltas
+            const deltaX = currentX - startX;
+            const deltaY = currentY - startY;
+
+            // Calculate velocity
+            const nowTime = new Date().getTime();
+            const timeDelta = Math.max(1, nowTime - touchStartTime);
+            velocityX = (currentX - lastTouchX) / timeDelta;
+            velocityY = (currentY - lastTouchY) / timeDelta;
+            lastTouchX = currentX;
+            lastTouchY = currentY;
+
+            // Determine if this is likely a scroll or a drag
+            if (!isScrolling) {
+                const absX = Math.abs(deltaX);
+                const absY = Math.abs(deltaY);
+
+                // If movement is primarily vertical and exceeds threshold, treat as scroll
+                if (absY > absX * SCROLL_BIAS && absY > DRAG_THRESHOLD) {
+                    isScrolling = true;
+                    isDragging = false;
+                    return; // Let the browser handle the scroll
+                }
+
+                // If movement is more horizontal or mixed, treat as drag
+                if (absX > DRAG_THRESHOLD || absY > DRAG_THRESHOLD) {
+                    // Confirm this is a drag operation
+                    isScrolling = false;
+                    e.preventDefault(); // Prevent scrolling
+                }
+            }
+
+            // If we're in drag mode, move the element
+            if (isDragging && !isScrolling) {
+                e.preventDefault();
+                const newLeft = offsetX + deltaX;
+                const newTop = offsetY + deltaY;
+
+                // Apply new position
+                draggable.style.left = `${newLeft}px`;
+                draggable.style.top = `${newTop}px`;
+            }
+        }
+
+        function handleTouchEnd(e) {
+            isDragging = false;
+            isScrolling = false;
+        }
+    });
+    </script>
+</body>
+</html>

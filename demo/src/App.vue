@@ -12,6 +12,21 @@ function toggleHandle() {
   useHandle.value = !useHandle.value
 }
 
+const showScrollMargin = ref(true)
+const scrollMargin = ref(40)
+
+function toggleShowScrollMargin() {
+  showScrollMargin.value = !showScrollMargin.value
+}
+
+const scrollMarginStyleVerticalStyle = computed(() => ({
+  height: `${scrollMargin.value}px`
+}))
+
+const scrollMarginStyleHorizontalStyle = computed(() => ({
+  width: `${scrollMargin.value}px`
+}))
+
 const verticalListRef = useTemplateRef('verticalListRef')
 const horizontalListRef = useTemplateRef('horizontalListRef')
 
@@ -74,6 +89,11 @@ function addRandomHorizontalItem() {
     <button @click="toggleHandle">{{ useHandle ? 'Yes' : 'No' }}</button>
   </div>
 
+  <div>
+    <span class="mr-8">Show scroll margin</span>
+    <button @click="toggleShowScrollMargin">{{ showScrollMargin ? 'Yes' : 'No' }}</button>
+  </div>
+
   <h3>Vertical list</h3>
 
   <div class="mb-8">
@@ -81,16 +101,17 @@ function addRandomHorizontalItem() {
     <button @click="addRandomVerticalItem">Add in random order</button>
   </div>
 
-  <div style="position: relative">
+  <div class="position-relative">
     <AppSortable
-      v-model="verticalList"
       ref="verticalListRef"
+      v-model="verticalList"
+      item-key="id"
       class="sortable-vertical"
       item-class="item"
       :handle="handle"
       direction="vertical"
       transition-group-name="scale-y"
-      item-key="id"
+      :auto-scroll-margin="scrollMargin"
     >
       <template #item="{ item, index }">
         <div>
@@ -101,8 +122,10 @@ function addRandomHorizontalItem() {
       </template>
     </AppSortable>
 
-    <div v-if="false" style="position: absolute; top: 0; width: 100%; height: 50px; background: red; opacity: 0.3"></div>
-    <div v-if="false" style="position: absolute; bottom: 0; width: 100%; height: 50px; background: red; opacity: 0.3"></div>
+    <template v-if="showScrollMargin">
+      <div class="scroll-margin scroll-margin-top" :style="scrollMarginStyleVerticalStyle"></div>
+      <div class="scroll-margin scroll-margin-bottom" :style="scrollMarginStyleVerticalStyle"></div>
+    </template>
   </div>
 
   <h3>Horizontal list</h3>
@@ -112,24 +135,32 @@ function addRandomHorizontalItem() {
     <button @click="addRandomHorizontalItem">Add in random order</button>
   </div>
 
-  <AppSortable
-    v-model="horizontalList"
-    ref="horizontalListRef"
-    class="sortable-horizontal"
-    item-class="item"
-    :handle="handle"
-    direction="horizontal"
-    transition-group-name="scale-x"
-    :item-key="getKey"
-  >
-    <template #item="{ item, index }">
-      <div>
-        <div class="handle" :style="{ backgroundColor: item.color }"></div>
-        <div>{{ item.name }}</div>
-        <button @click="removeItem(horizontalList, index)">Remove</button>
-      </div>
+  <div class="position-relative">
+    <AppSortable
+      ref="horizontalListRef"
+      v-model="horizontalList"
+      :item-key="getKey"
+      class="sortable-horizontal"
+      item-class="item"
+      :handle="handle"
+      direction="horizontal"
+      transition-group-name="scale-x"
+      :auto-scroll-margin="scrollMargin"
+    >
+      <template #item="{ item, index }">
+        <div>
+          <div class="handle" :style="{ backgroundColor: item.color }"></div>
+          <div>{{ item.name }}</div>
+          <button @click="removeItem(horizontalList, index)">Remove</button>
+        </div>
+      </template>
+    </AppSortable>
+
+    <template v-if="showScrollMargin">
+      <div class="scroll-margin scroll-margin-left" :style="scrollMarginStyleHorizontalStyle"></div>
+      <div class="scroll-margin scroll-margin-right" :style="scrollMarginStyleHorizontalStyle"></div>
     </template>
-  </AppSortable>
+  </div>
 </template>
 
 <style src="./stylesheets/main.css" />

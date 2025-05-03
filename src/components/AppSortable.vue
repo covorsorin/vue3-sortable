@@ -79,6 +79,14 @@ const props = defineProps({
   autoScroll: {
     type: Boolean,
     default: true
+  },
+  autoScrollMargin: {
+    type: Number,
+    default: 50
+  },
+  autoScrollSpeed: {
+    type: Number,
+    default: 10
   }
 })
 
@@ -338,9 +346,6 @@ function animateAutoScroll(timestamp) {
   autoScrollAnimationRequest = requestAnimationFrame(animateAutoScroll)
 }
 
-const SCROLL_MARGIN = 50
-const SCROLL_SPEED = 10
-
 function autoScroll() {
   const targetSize = target[sizeKey.value]
   const coordinate = isVertical.value ? position.value.y : position.value.x
@@ -352,8 +357,8 @@ function autoScroll() {
   const hasReachedMinScroll = initialScroll == 0
   const hasReachedMaxScroll = (sortableScrollSize.value - initialScroll) == sortableViewSize.value
 
-  const startDelta = SCROLL_MARGIN - relativeCoordinateStart
-  const endDelta = relativeCoordinateEnd - (sortableViewSize.value - SCROLL_MARGIN)
+  const startDelta = props.autoScrollMargin - relativeCoordinateStart
+  const endDelta = relativeCoordinateEnd - (sortableViewSize.value - props.autoScrollMargin)
 
   let direction = null
   let delta = null
@@ -368,18 +373,15 @@ function autoScroll() {
     return
   }
 
-  const dragDelta = getDragDelta()
-  const dragDirection = dragDelta > 0 ? 1 : -1
-
-  // Don't auto-scroll if the drag movement is minimal or if
-  // the user is dragging in the opposite direction of the scroll.
-  if (Math.abs(dragDelta) < 5 || dragDirection != direction) {
+  // Don't auto-scroll if user is dragging in the opposite direction of the scroll.
+  const dragDirection = getDragDelta() > 0 ? 1 : -1
+  if (dragDirection != direction) {
     return
   }
 
-  const acceleration = clamp(delta, 0, SCROLL_MARGIN) / SCROLL_MARGIN
+  const acceleration = clamp(delta, 0, props.autoScrollMargin) / props.autoScrollMargin
 
-  sortableRef.value[scrollKey.value] += direction * acceleration * SCROLL_SPEED
+  sortableRef.value[scrollKey.value] += direction * acceleration * props.autoScrollSpeed
   const scrollDelta = direction * Math.abs(initialScroll - sortableRef.value[scrollKey.value])
 
   const minCoordinate = sortableRef.value[scrollKey.value]

@@ -47,6 +47,45 @@
     border-radius: 50%;
 }
 
+.position-relative {
+    position: relative;
+}
+
+
+.scroll-margin {
+    position: absolute;
+    background-color: red;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.scroll-margin-top {
+    top: 0;
+}
+
+.scroll-margin-bottom {
+    bottom: 0;
+}
+
+.scroll-margin-top,
+.scroll-margin-bottom {
+    width: 100%;
+}
+
+.scroll-margin-left {
+    left: 0;
+}
+
+.scroll-margin-right {
+    right: 0;
+}
+
+.scroll-margin-left,
+.scroll-margin-right {
+    top: 0;
+    height: 100%;
+}
+
 .scale-x-enter-active, .scale-x-leave-active,
 .scale-y-enter-active, .scale-y-leave-active {
     transition: transform 0.5s ease, opacity 0.5s ease;

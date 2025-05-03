@@ -1,6 +1,6 @@
 # vue3-sortable
 
-Minimal, kind-of opinionated, Vue 3 sortable list component.
+Minimal, Vue 3 sortable list component.
 
 Developed for [Pigments](https://www.instagram.com/pigmentsapp/) app.
 
@@ -15,7 +15,7 @@ Check out vue3-sortable on [npmjs.com](https://www.npmjs.com/package/vue3-sortab
 ## Props
 
 | Prop                 | Type               | Required | Default      | Description                                                                                                                                                                             |
-| -------------------- | ------------------ | -------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------------|--------------------|----------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | modelValue           | Array              | Yes      |              | The list of items that need to be sorted.                                                                                                                                               |
 | direction            | String             | No       | `'vertical'` | The direction of the sortable (`'vertical'` or `'horizontal'`).                                                                                                                         |
 | itemKey              | Function \| String | Yes      |              | The unique key used to identify each element from the list. It can be a function which receives the `item` and `index` as parameters or a string representing a key on the item object. |
@@ -29,6 +29,8 @@ Check out vue3-sortable on [npmjs.com](https://www.npmjs.com/package/vue3-sortab
 | dragDelay            | Number             | No       | `150`        | The time in milliseconds after the event is registered as a drag.                                                                                                                       |
 | dragDelayOnTouchOnly | Boolean            | No       | `true`       | Whether the `dragDelay` prop should apply only on mobile devices.                                                                                                                       |
 | autoScroll           | Boolean            | No       | `true`       | Whether to auto-scroll when dragging an item near the edges.                                                                                                                            |
+| autoScrollMargin     | Number             | No       | `50`         | The distance from the container edge that triggers auto-scrolling (in pixels).                                                                                                          |
+| autoScrollSpeed      | Number             | No       | `10`         | The speed at which auto-scrolling occurs.                                                                                                                                               |
 
 ## Emits
 
