@@ -12,7 +12,7 @@ function toggleHandle() {
   useHandle.value = !useHandle.value
 }
 
-const showScrollMargin = ref(true)
+const showScrollMargin = ref(false)
 const scrollMargin = ref(40)
 
 function toggleShowScrollMargin() {
