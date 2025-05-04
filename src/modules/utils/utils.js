@@ -24,3 +24,20 @@ export function hasClassUpToParent(element, parent, className) {
 
     return false
 }
+
+export function getElementBounds(element, parent) {
+    const elementRect = element.getBoundingClientRect()
+    const parentRect = parent.getBoundingClientRect()
+
+    const top = elementRect.top - parentRect.top
+    const bottom = elementRect.bottom - parentRect.top
+    const left = elementRect.left - parentRect.left
+    const right = elementRect.right - parentRect.left
+
+    return {
+        top,
+        bottom,
+        left,
+        right
+    }
+}
