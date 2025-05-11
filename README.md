@@ -1,16 +1,47 @@
 # vue3-sortable
 
-Minimal, Vue 3 sortable list component.
+Minimal, Vue 3 sortable list component, with no dependencies.
 
 Developed for [Pigments](https://www.instagram.com/pigmentsapp/) app.
 
-Check out the [demo](https://covorsorin.github.io/vue3-sortable/) and the `demo` folder.
-
 Check out vue3-sortable on [npmjs.com](https://www.npmjs.com/package/vue3-sortable).
 
-## Slots
+## Demo
 
-`#item` - Receives the v-for directive item as a prop.
+Check out the [live demo](https://covorsorin.github.io/vue3-sortable/) and the `demo` folder.
+
+## Usage
+
+Install the dependency:
+
+```shell
+npm i vue3-sortable
+```
+
+Start by importing the component:
+
+```javascript
+import { AppSortable } from 'vue3-sortable';
+```
+
+Component usage:
+
+```html
+<AppSortable
+  v-model="verticalList"
+  direction="vertical"
+  item-key="id"
+  handle="handle"
+  item-class="item"
+>
+  <template #item="{ item, index }">
+    <div>
+      <div class="handle mr-8"></div>
+      <div>{{ item.name }}</div>
+    </div>
+  </template>
+</AppSortable>
+```
 
 ## Props
 
@@ -32,23 +63,25 @@ Check out vue3-sortable on [npmjs.com](https://www.npmjs.com/package/vue3-sortab
 | autoScrollMargin     | Number             | No       | `50`         | The distance from the container edge that triggers auto-scrolling (in pixels).                                                                                                          |
 | autoScrollSpeed      | Number             | No       | `10`         | The speed at which auto-scrolling occurs.                                                                                                                                               |
 
-## Emits
+## Slots
 
-### update:modelValue
+`#item` - Receives the v-for directive `item` and it's `index` as props.
 
-### drag-start
+## Events
 
-#### Parameters:
+### @update:model-value
+
+### @drag-start
 
 - index - The initial index of the dragged element.
 
-#### drag-end
+### @drag-end
 
 - oldIndex - The initial index of the dragged element.
 - newIndex - The final index of the dragged element.
 - value - The reordered list.
 
-#### index-change
+### @index-change
 
 Triggers when the dragged item index changes.
 
