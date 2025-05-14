@@ -127,6 +127,7 @@ const position = ref({
 })
 
 const isDragging = ref(false)
+const wasDragging = ref(false)
 const initialIndex = ref(null)
 const currentIndex = ref(null)
 const targetDragOffset = ref(0)
@@ -342,15 +343,16 @@ function onDragStop() {
   currentIndex.value = null
   dragDirection.value = null
   isDragging.value = false
+  wasDragging.value = true
 }
 
 function onItemClick(event) {
-  if (!isDragging.value) {
+  if (!wasDragging.value) {
     return
   }
 
   event.stopPropagation()
-  isDragging.value = false
+  wasDragging.value = false
 }
 
 function moveTarget() {
