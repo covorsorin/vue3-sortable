@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
+        "types": "./dist/types/index.d.ts",
         "import": "./dist/vue3-sortable-lib.js",
         "require": "./dist/vue3-sortable-lib.umd.cjs"
       }
