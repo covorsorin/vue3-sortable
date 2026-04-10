@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
-    "outFile": "dist/index.d.ts",
-    "target": "es2022",
-    "module": "es2022",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["ESNext", "DOM"],
     "allowJs": true,
-    "skipLibCheck": true,
-    "lib": [
-      "es2022",
-      "dom",
-      "dom.iterable"
-    ]
+    "checkJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "src/**/*.vue"
-  ]
+  "include": ["src/**/*.vue", "src/**/*.js"]
 }
