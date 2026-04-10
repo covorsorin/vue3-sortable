@@ -19,7 +19,7 @@
     "dev": "vite",
     "clean": "rm -rf dist",
     "build": "npm run clean && vite build && npm run types",
-    "types": "npm run clean && vue-tsc --declaration --emitDeclarationOnly -p tsconfig.json",
+    "types": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.json",
     "preview": "vite preview"
   },
   "devDependencies": {
