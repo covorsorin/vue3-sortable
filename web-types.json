@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json.schemastore.org/web-types.json",
+  "framework": "vue",
+  "name": "vue3-sortable",
+  "version": "0.12.0",
+  "contributions": {
+    "html": {
+      "vue-components": [
+        {
+          "name": "AppSortable",
+          "source": {
+            "module": "vue3-sortable",
+            "symbol": "AppSortable"
+          },
+          "description": "Minimal, Vue 3 sortable list component, with no dependencies.",
+          "attributes": [
+            {
+              "name": "model-value",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "any[]"
+              },
+              "description": "The list of items that need to be sorted. Use with v-model."
+            },
+            {
+              "name": "direction",
+              "value": {
+                "kind": "expression",
+                "type": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "description": "The direction of the sortable."
+            },
+            {
+              "name": "item-key",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string | ((item: any, index: number) => string | number)"
+              },
+              "description": "The unique key used to identify each element from the list. It can be a function which receives the `item` and `index` as parameters or a string representing a key on the item object."
+            },
+            {
+              "name": "disabled",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "default": "false",
+              "description": "Whether to disable the component."
+            },
+            {
+              "name": "handle",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "null",
+              "description": "CSS class selector used as a drag handle. If the handle is not provided, the item can be moved from anywhere."
+            },
+            {
+              "name": "item-class",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "null",
+              "description": "CSS class applied to the items."
+            },
+            {
+              "name": "transition-group-name",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "null",
+              "description": "The name of the transition used for the `TransitionGroup` that is wrapping the list."
+            },
+            {
+              "name": "animation-duration",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "200",
+              "description": "Reorder animation duration, in milliseconds."
+            },
+            {
+              "name": "animation-easing",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              },
+              "default": "'ease'",
+              "description": "Reorder animation easing."
+            },
+            {
+              "name": "drag-threshold",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "3",
+              "description": "The minimum number of pixels after it's considered a drag event."
+            },
+            {
+              "name": "drag-delay",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "150",
+              "description": "The time in milliseconds after the event is registered as a drag."
+            },
+            {
+              "name": "drag-delay-on-touch-only",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "default": "true",
+              "description": "Whether the `dragDelay` prop should apply only on mobile devices."
+            },
+            {
+              "name": "auto-scroll",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "default": "true",
+              "description": "Whether to auto-scroll when dragging an item near the edges."
+            },
+            {
+              "name": "auto-scroll-margin",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "50",
+              "description": "The distance from the container edge that triggers auto-scrolling (in pixels)."
+            },
+            {
+              "name": "auto-scroll-speed",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              },
+              "default": "10",
+              "description": "The speed at which auto-scrolling occurs."
+            }
+          ],
+          "js": {
+            "vue-model": {
+              "prop": "modelValue",
+              "event": "update:modelValue"
+            },
+            "events": [
+              {
+                "name": "update:model-value",
+                "description": "Emitted with the reordered list, use for v-model."
+              },
+              {
+                "name": "start",
+                "description": "Emitted when a drag starts.",
+                "arguments": [
+                  {
+                    "name": "index",
+                    "description": "The initial index of the dragged element."
+                  }
+                ]
+              },
+              {
+                "name": "change",
+                "description": "Emitted when the dragged item's index changes during a drag.",
+                "arguments": [
+                  {
+                    "name": "oldIndex",
+                    "description": "The initial index of the dragged element."
+                  },
+                  {
+                    "name": "newIndex",
+                    "description": "The current index of the dragged element."
+                  }
+                ]
+              },
+              {
+                "name": "end",
+                "description": "Emitted when a drag ends.",
+                "arguments": [
+                  {
+                    "name": "oldIndex",
+                    "description": "The initial index of the dragged element."
+                  },
+                  {
+                    "name": "newIndex",
+                    "description": "The final index of the dragged element."
+                  },
+                  {
+                    "name": "value",
+                    "description": "The reordered list."
+                  }
+                ]
+              }
+            ]
+          },
+          "slots": [
+            {
+              "name": "item",
+              "description": "The content of each sortable item.",
+              "vue-properties": [
+                {
+                  "name": "item",
+                  "description": "The current item from the list."
+                },
+                {
+                  "name": "index",
+                  "description": "The index of the current item."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
