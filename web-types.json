@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/web-types.json",
   "framework": "vue",
   "name": "vue3-sortable",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "contributions": {
     "html": {
       "vue-components": [
@@ -165,22 +165,8 @@
                 "description": "Emitted when a drag starts.",
                 "arguments": [
                   {
-                    "name": "index",
-                    "description": "The initial index of the dragged element."
-                  }
-                ]
-              },
-              {
-                "name": "change",
-                "description": "Emitted when the dragged item's index changes during a drag.",
-                "arguments": [
-                  {
-                    "name": "oldIndex",
-                    "description": "The initial index of the dragged element."
-                  },
-                  {
-                    "name": "newIndex",
-                    "description": "The current index of the dragged element."
+                    "name": "payload",
+                    "description": "Object containing the initial index of the dragged element."
                   }
                 ]
               },
@@ -189,16 +175,18 @@
                 "description": "Emitted when a drag ends.",
                 "arguments": [
                   {
-                    "name": "oldIndex",
-                    "description": "The initial index of the dragged element."
-                  },
+                    "name": "payload",
+                    "description": "Object containing the initial index, the final index and the reordered list."
+                  }
+                ]
+              },
+              {
+                "name": "change",
+                "description": "Emitted when the dragged item's index changes during a drag.",
+                "arguments": [
                   {
-                    "name": "newIndex",
-                    "description": "The final index of the dragged element."
-                  },
-                  {
-                    "name": "value",
-                    "description": "The reordered list."
+                    "name": "payload",
+                    "description": "Object containing the initial index and the current index of the dragged element."
                   }
                 ]
               }

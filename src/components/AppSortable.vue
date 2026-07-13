@@ -15,6 +15,11 @@
         @touchstart="onDragStart($event, index)"
         @click.capture="onItemClick($event)"
       >
+        <!--
+          @slot The content of each sortable item.
+          @binding {any} item The current item from the list.
+          @binding {number} index The index of the current item.
+        -->
         <slot
           name="item"
           :item="item"
@@ -31,59 +36,106 @@ import { clamp, getEventPosition, getRelativeEventPosition } from '../modules/ut
 import { getElementBounds, hasClassUpToParent, isBetween, moveArrayElement } from '../modules/utils/utils.js'
 
 const props = defineProps({
+  /**
+   * The direction of the sortable.
+   * @values vertical, horizontal
+   */
   direction: {
     type: String,
     default: 'vertical',
     validator: (value) => ['vertical', 'horizontal'].includes(value)
   },
+  /**
+   * The unique key used to identify each element from the list. It can be a function
+   * which receives the `item` and `index` as parameters or a string representing
+   * a key on the item object.
+   * @type {string | ((item: any, index: number) => string | number)}
+   */
   itemKey: {
     type: [Function, String],
     required: true
   },
+  /**
+   * Whether to disable the component.
+   */
   disabled: {
     type: Boolean,
     default: false
   },
+  /**
+   * CSS class selector used as a drag handle. If the handle is not provided,
+   * the item can be moved from anywhere.
+   */
   handle: {
     type: String,
     default: null
   },
+  /**
+   * CSS class applied to the items.
+   */
   itemClass: {
     type: String,
     default: null
   },
+  /**
+   * The name of the transition used for the `TransitionGroup` that is wrapping the list.
+   */
   transitionGroupName: {
     type: String,
     default: null
   },
+  /**
+   * Reorder animation duration, in milliseconds.
+   */
   animationDuration: {
     type: Number,
     default: 200
   },
+  /**
+   * Reorder animation easing.
+   */
   animationEasing: {
     type: String,
     default: 'ease'
   },
+  /**
+   * The minimum number of pixels after it's considered a drag event.
+   */
   dragThreshold: {
     type: Number,
     default: 3
   },
+  /**
+   * The time in milliseconds after the event is registered as a drag.
+   */
   dragDelay: {
     type: Number,
     default: 150
   },
+  /**
+   * Whether the `dragDelay` prop should apply only on mobile devices.
+   */
   dragDelayOnTouchOnly: {
     type: Boolean,
     default: true
   },
+  /**
+   * Whether to auto-scroll when dragging an item near the edges.
+   */
   autoScroll: {
     type: Boolean,
     default: true
   },
+  /**
+   * The distance from the container edge that triggers auto-scrolling (in pixels).
+   */
   autoScrollMargin: {
     type: Number,
     default: 50
   },
+  /**
+   * The speed at which auto-scrolling occurs.
+   */
   autoScrollSpeed: {
     type: Number,
     default: 10
@@ -91,13 +143,28 @@ const props = defineProps({
 })
 
 const emits = defineEmits([
+  /**
+   * Emitted when a drag starts.
+   * @arg {{ index: number }} payload - Object containing the initial index of the dragged element.
+   */
   'start',
+  /**
+   * Emitted when a drag ends.
+   * @arg {{ oldIndex: number, newIndex: number, value: any[] }} payload - Object containing the initial index, the final index and the reordered list.
+   */
   'end',
+  /**
+   * Emitted when the dragged item's index changes during a drag.
+   * @arg {{ oldIndex: number, newIndex: number }} payload - Object containing the initial index and the current index of the dragged element.
+   */
   'change'
 ])
 
 const sortableRef = useTemplateRef('sortable')
 
+/**
+ * The list of items that need to be sorted. Use with v-model.
+ */
 const items = defineModel()
 
 const itemKeys = computed(() => {
