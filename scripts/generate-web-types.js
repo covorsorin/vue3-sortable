@@ -52,9 +52,7 @@ function propToAttribute(prop) {
     name: toKebabCase(prop.name)
   }
 
-  if (prop.required) {
-    attribute.required = true
-  }
+  attribute.required = !!prop.required
 
   attribute.value = {
     kind: 'expression',
