@@ -15,11 +15,16 @@ const componentMeta = {
   AppSortable: {
     description: 'Minimal, Vue 3 sortable list component, with no dependencies.',
     model: {
-      prop: 'modelValue',
-      event: 'update:modelValue',
-      type: 'any[]',
-      required: true,
-      description: 'The list of items that need to be sorted. Use with v-model.'
+      prop: {
+        name: 'modelValue',
+        required: true,
+        type: { name: 'any[]' },
+        description: 'The list of items that need to be sorted. Use with v-model.'
+      },
+      event: {
+        name: 'update:modelValue',
+        description: 'Emitted with the reordered list, use for v-model.'
+      }
     }
   }
 }
@@ -108,47 +113,33 @@ async function documentComponent(fileName) {
   const doc = await parse(join(componentsDir, fileName))
   const meta = componentMeta[doc.displayName] ?? {}
 
-  const component = {
+  const attributes = (doc.props ?? []).map(propToAttribute)
+  const events = (doc.events ?? []).map(eventToWebTypes)
+
+  if (meta.model) {
+    attributes.unshift(propToAttribute(meta.model.prop))
+    events.unshift(eventToWebTypes(meta.model.event))
+  }
+
+  return {
     name: doc.displayName,
     source: {
       module: pkg.name,
       symbol: doc.displayName
     },
-    description: meta.description ?? toSingleLine(doc.description)
+    description: meta.description ?? toSingleLine(doc.description),
+    attributes,
+    js: {
+      ...(meta.model && {
+        'vue-model': {
+          prop: meta.model.prop.name,
+          event: meta.model.event.name
+        }
+      }),
+      events
+    },
+    slots: (doc.slots ?? []).map(slotToWebTypes)
   }
-
-  const attributes = (doc.props ?? []).map(propToAttribute)
-  const events = (doc.events ?? []).map(eventToWebTypes)
-  const js = {}
-
-  if (meta.model) {
-    attributes.unshift({
-      name: toKebabCase(meta.model.prop),
-      ...(meta.model.required && { required: true }),
-      value: {
-        kind: 'expression',
-        type: meta.model.type
-      },
-      description: meta.model.description
-    })
-
-    js['vue-model'] = {
-      prop: meta.model.prop,
-      event: meta.model.event
-    }
-
-    events.unshift({
-      name: toKebabCase(meta.model.event),
-      description: `Emitted with the reordered list, use for v-model.`
-    })
-  }
-
-  component.attributes = attributes
-  js.events = events
-  component.js = js
-  component.slots = (doc.slots ?? []).map(slotToWebTypes)
-
-  return component
 }
 
 const componentFiles = readdirSync(componentsDir).filter((fileName) => fileName.endsWith('.vue'))
