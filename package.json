@@ -10,10 +10,8 @@
   "web-types": "./web-types.json",
   "exports": {
     ".": {
-      "import": {
-        "import": "./dist/vue3-sortable-lib.js",
-        "require": "./dist/vue3-sortable-lib.umd.cjs"
-      }
+      "import": "./dist/vue3-sortable-lib.js",
+      "require": "./dist/vue3-sortable-lib.umd.cjs"
     }
   },
   "scripts": {
@@ -24,9 +22,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.8",
-    "vite": "^8.2.2",
-    "vue": "^3.5.42",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "vite": "^8.3.5",
+    "vue": "^3.5.44",
     "vue-docgen-api": "^4.79.2"
   },
   "peerDependencies": {
