@@ -260,16 +260,18 @@ function getStyle(index) {
     }
   }
 
+  // Uses `translate` instead of `transform`, because `TransitionGroup` overwrites the inline
+  // `transform` of the items it considers moved, leaving them out of place until the next update.
   const style = {
-    transition: `transform ${props.animationDuration}ms ${props.animationEasing}`,
-    transform: 'translate3d(0, 0, 0)'
+    transition: `translate ${props.animationDuration}ms ${props.animationEasing}`,
+    translate: '0 0'
   }
 
   if (isBetween(index, initialIndex.value, currentIndex.value)) {
-    const transform = (initialIndex.value - currentIndex.value < 0) ? '-100%' : '100%'
-    const transformX = isVertical.value ? 0 : transform
-    const transformY = isVertical.value ? transform : 0
-    style.transform = `translate3d(${transformX}, ${transformY}, 0)`
+    const translate = (initialIndex.value - currentIndex.value < 0) ? '-100%' : '100%'
+    const translateX = isVertical.value ? 0 : translate
+    const translateY = isVertical.value ? translate : 0
+    style.translate = `${translateX} ${translateY}`
   }
 
   return style
@@ -407,7 +409,7 @@ function onDragStop() {
   removeDragListeners()
 
   if (target) {
-    target.style.transform = ''
+    target.style.translate = ''
     target = null
   }
 
@@ -472,10 +474,10 @@ function moveTarget() {
 
   currentIndex.value = clamp(Math.floor(coordinate / targetSize), 0, items.value.length - 1)
 
-  const transform = clampedCoordinate - targetStart
-  const transformX = isVertical.value ? 0 : transform
-  const transformY = isVertical.value ? transform : 0
-  target.style.transform = `translate3d(${transformX}px, ${transformY}px, 0)`
+  const translate = clampedCoordinate - targetStart
+  const translateX = isVertical.value ? 0 : translate
+  const translateY = isVertical.value ? translate : 0
+  target.style.translate = `${translateX}px ${translateY}px`
 }
 
 let previousAutoScrollTimestamp = 0

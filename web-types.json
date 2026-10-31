@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/web-types.json",
   "framework": "vue",
   "name": "vue3-sortable",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "contributions": {
     "html": {
       "vue-components": [
