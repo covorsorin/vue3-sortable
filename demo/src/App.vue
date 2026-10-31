@@ -1,166 +1,107 @@
 <script setup>
-import AppSortable from '../../src/components/AppSortable.vue'
+import { onMounted, ref, watch } from 'vue'
+import pkg from '../../package.json'
+import CodeBlock from './components/CodeBlock.vue'
+import PlaygroundSection from './components/PlaygroundSection.vue'
+import ExamplesSection from './components/ExamplesSection.vue'
+import ApiSection from './components/ApiSection.vue'
 
-import { computed, ref, useTemplateRef } from 'vue'
-import { getRandomColor } from './modules/utils/utils.js'
-import { scrollHorizontallyToIndex, scrollVerticallyToIndex } from './modules/utils/scroll.js'
+const GITHUB_URL = 'https://github.com/CovorSorin/vue3-sortable'
+const NPM_URL = 'https://www.npmjs.com/package/vue3-sortable'
+const THEME_KEY = 'vue3-sortable-theme'
 
-const useHandle = ref(false)
-const handle = computed(() => useHandle.value ? 'handle' : null)
+const features = [
+  { value: '3 kB', label: 'gzipped' },
+  { value: '0', label: 'dependencies' },
+  { value: '2', label: 'directions' },
+  { value: 'Touch', label: 'and mouse' }
+]
 
-function toggleHandle() {
-  useHandle.value = !useHandle.value
-}
+const theme = ref(null)
 
-const showScrollMargin = ref(false)
-const scrollMargin = ref(40)
-
-function toggleShowScrollMargin() {
-  showScrollMargin.value = !showScrollMargin.value
-}
-
-const scrollMarginStyleVerticalStyle = computed(() => ({
-  height: `${scrollMargin.value}px`
-}))
-
-const scrollMarginStyleHorizontalStyle = computed(() => ({
-  width: `${scrollMargin.value}px`
-}))
-
-const verticalListRef = useTemplateRef('verticalListRef')
-const horizontalListRef = useTemplateRef('horizontalListRef')
-
-const horizontalList = ref(Array.from(Array(10).keys()).map(index => createItem()))
-const verticalList = ref(Array.from(Array(10).keys()).map(index => createItem()))
-
-function getKey(item) {
-  return item.id
-}
-
-function createItem() {
-  const id = window.crypto.randomUUID()
-
-  return {
-    id,
-    name: `Item ${id.slice(0, 8)}`,
-    color: getRandomColor()
+function readStoredTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY)
+  } catch {
+    return null
   }
 }
 
-function removeItem(list, index) {
-  list.splice(index, 1)
+function toggleTheme() {
+  const current = theme.value
+    ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  theme.value = current == 'dark' ? 'light' : 'dark'
+
+  try {
+    localStorage.setItem(THEME_KEY, theme.value)
+  } catch {
+    // The choice just won't be remembered.
+  }
 }
 
-function addItem(list) {
-  list.push(createItem())
-  return list.length
-}
+watch(theme, (value) => {
+  if (value) {
+    document.documentElement.dataset.theme = value
+  }
+})
 
-function addRandomItem(list) {
-  const index = Math.floor(Math.random() * (list.length + 1))
-  list.splice(index, 0, createItem())
-  return index
-}
-
-function addVerticalItem() {
-  const index = addItem(verticalList.value)
-  scrollVerticallyToIndex(verticalListRef.value.$el, index)
-}
-
-function addRandomVerticalItem() {
-  const index = addRandomItem(verticalList.value)
-  scrollVerticallyToIndex(verticalListRef.value.$el, index)
-}
-
-function addHorizontalItem() {
-  const index = addItem(horizontalList.value)
-  scrollHorizontallyToIndex(horizontalListRef.value.$el, index)
-}
-
-function addRandomHorizontalItem() {
-  const index = addRandomItem(horizontalList.value)
-  scrollHorizontallyToIndex(horizontalListRef.value.$el, index)
-}
+onMounted(() => {
+  theme.value = readStoredTheme()
+})
 </script>
 
 <template>
-  <div>
-    <span class="mr-8">Use handle</span>
-    <button @click="toggleHandle">{{ useHandle ? 'Yes' : 'No' }}</button>
-  </div>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="#top">
+        vue3-sortable
+        <span class="nav-version">v{{ pkg.version }}</span>
+      </a>
 
-  <div>
-    <span class="mr-8">Show scroll margin</span>
-    <button @click="toggleShowScrollMargin">{{ showScrollMargin ? 'Yes' : 'No' }}</button>
-  </div>
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-section-link" href="#playground">Playground</a>
+        <a class="nav-section-link" href="#examples">Examples</a>
+        <a class="nav-section-link" href="#api">API</a>
+        <a :href="GITHUB_URL">GitHub</a>
+        <a :href="NPM_URL">npm</a>
+        <button class="button button-quiet" type="button" @click="toggleTheme">Theme</button>
+      </nav>
+    </div>
+  </header>
 
-  <h3>Vertical list</h3>
+  <main id="top">
+    <section class="hero container">
+      <h1>Sortable lists for Vue&nbsp;3, and nothing else.</h1>
+      <p class="hero-lead">
+        One small component with no dependencies. Bind a list with <code>v-model</code>,
+        render your own items in a slot, and drag them with a mouse or a finger.
+      </p>
 
-  <div class="mb-8">
-    <button class="mr-8" @click="addVerticalItem">Add</button>
-    <button @click="addRandomVerticalItem">Add in random order</button>
-  </div>
+      <div class="hero-install">
+        <CodeBlock code="npm i vue3-sortable" />
+      </div>
 
-  <div class="position-relative">
-    <AppSortable
-      ref="verticalListRef"
-      v-model="verticalList"
-      item-key="id"
-      class="sortable-vertical"
-      item-class="item"
-      :handle="handle"
-      direction="vertical"
-      transition-group-name="scale-y"
-      :auto-scroll-margin="scrollMargin"
-    >
-      <template #item="{ item, index }">
-        <div>
-          <div class="handle mr-8" :style="{ backgroundColor: item.color }"></div>
-          <div>{{ item.name }}</div>
-          <button @click="removeItem(verticalList, index)">Remove</button>
+      <dl class="stats">
+        <div v-for="feature in features" :key="feature.label" class="stat">
+          <dt>{{ feature.label }}</dt>
+          <dd>{{ feature.value }}</dd>
         </div>
-      </template>
-    </AppSortable>
+      </dl>
+    </section>
 
-    <template v-if="showScrollMargin">
-      <div class="scroll-margin scroll-margin-top" :style="scrollMarginStyleVerticalStyle"></div>
-      <div class="scroll-margin scroll-margin-bottom" :style="scrollMarginStyleVerticalStyle"></div>
-    </template>
-  </div>
+    <PlaygroundSection />
+    <ExamplesSection />
+    <ApiSection />
+  </main>
 
-  <h3>Horizontal list</h3>
-
-  <div class="mb-8">
-    <button class="mr-8" @click="addHorizontalItem">Add</button>
-    <button @click="addRandomHorizontalItem">Add in random order</button>
-  </div>
-
-  <div class="position-relative">
-    <AppSortable
-      ref="horizontalListRef"
-      v-model="horizontalList"
-      :item-key="getKey"
-      class="sortable-horizontal"
-      item-class="item"
-      :handle="handle"
-      direction="horizontal"
-      transition-group-name="scale-x"
-      :auto-scroll-margin="scrollMargin"
-    >
-      <template #item="{ item, index }">
-        <div>
-          <div class="handle" :style="{ backgroundColor: item.color }"></div>
-          <div>{{ item.name }}</div>
-          <button @click="removeItem(horizontalList, index)">Remove</button>
-        </div>
-      </template>
-    </AppSortable>
-
-    <template v-if="showScrollMargin">
-      <div class="scroll-margin scroll-margin-left" :style="scrollMarginStyleHorizontalStyle"></div>
-      <div class="scroll-margin scroll-margin-right" :style="scrollMarginStyleHorizontalStyle"></div>
-    </template>
-  </div>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>MIT licensed. Developed for the Pigments app.</span>
+      <span class="footer-links">
+        <a :href="GITHUB_URL">GitHub</a>
+        <a :href="`${GITHUB_URL}/issues`">Issues</a>
+        <a :href="NPM_URL">npm</a>
+      </span>
+    </div>
+  </footer>
 </template>
-
-<style src="./stylesheets/main.css" />
