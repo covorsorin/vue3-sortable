@@ -71,19 +71,19 @@ Component usage:
 
 ### @update:model-value
 
-### @drag-start
+### @start
 
 - index - The initial index of the dragged element.
 
-### @drag-end
+### @end
 
 - oldIndex - The initial index of the dragged element.
 - newIndex - The final index of the dragged element.
 - value - The reordered list.
 
-### @index-change
+### @change
 
 Triggers when the dragged item index changes.
 
 - oldIndex - The initial index of the dragged element.
-- newIndex - The final index of the dragged element.
+- newIndex - The current index of the dragged element.
