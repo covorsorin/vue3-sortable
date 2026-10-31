@@ -33,7 +33,7 @@
 <script setup>
 import { computed, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { clamp, getEventPosition, getRelativeEventPosition } from '../modules/utils/mouse.js'
-import { getElementBounds, hasClassUpToParent, isBetween, moveArrayElement } from '../modules/utils/utils.js'
+import { getElementBounds, hasClassUpToParent, isBetween, isEditableElement, moveArrayElement } from '../modules/utils/utils.js'
 
 const props = defineProps({
   /**
@@ -206,6 +206,10 @@ const dragDirection = ref(null)
 let target = null
 // Whether the target was fully in view at drag start.
 let wasTargetFullyInView = true
+// The target size and its start position in the scrollable content, measured at drag start.
+// Not derived from `offsetWidth` / `offsetHeight`, those are rounded and the error adds up with the index.
+let targetSize = 0
+let targetStart = 0
 let startedDragAt = null
 let isTouchEvent = false
 let autoScrollAnimationRequest = null
@@ -271,8 +275,12 @@ function getStyle(index) {
   return style
 }
 
-watch(currentIndex, () => {
+watch(currentIndex, (newIndex, oldIndex) => {
   styles.value = items.value.map((item, index) => getStyle(index))
+
+  if (newIndex === null || oldIndex === null) {
+    return
+  }
 
   emits('change', {
     oldIndex: initialIndex.value,
@@ -282,6 +290,16 @@ watch(currentIndex, () => {
 
 function onDragStart(event, index) {
   if (props.disabled) {
+    return
+  }
+
+  // Ignore additional touches while a gesture is already in progress.
+  if (target) {
+    return
+  }
+
+  // Let form fields receive focus and text selection.
+  if (isEditableElement(event.target)) {
     return
   }
 
@@ -324,13 +342,16 @@ function onDragStart(event, index) {
 
   const targetBounds = getElementBounds(target, sortableRef.value)
 
+  targetSize = targetBounds[boundsEndKey.value] - targetBounds[boundsStartKey.value]
+  targetStart = targetBounds[boundsStartKey.value] + sortableRef.value[scrollKey.value]
+
   wasTargetFullyInView =
     targetBounds[boundsStartKey.value] >= 0 &&
     targetBounds[boundsEndKey.value] <= sortableViewSize.value
 }
 
 function onDrag(event) {
-  if (props.dragDelay && props.dragDelayOnTouchOnly ? isTouchEvent : true) {
+  if (props.dragDelay && (isTouchEvent || !props.dragDelayOnTouchOnly)) {
     const timeDelta = performance.now() - startedDragAt
     const isTimeThresholdExceeded = timeDelta > props.dragDelay
     if (!isTimeThresholdExceeded) {
@@ -359,7 +380,7 @@ function onDrag(event) {
       autoScrollAnimationRequest = requestAnimationFrame(animateAutoScroll)
 
       emits('start', {
-        index: initialIndex
+        index: initialIndex.value
       })
     } else {
       return
@@ -373,13 +394,17 @@ function onDrag(event) {
   moveTarget()
 }
 
-function onDragStop() {
+function removeDragListeners() {
   document.removeEventListener('mousemove', onDrag)
   document.removeEventListener('mouseup', onDragStop)
 
   document.removeEventListener('touchmove', onDrag)
   document.removeEventListener('touchend', onDragStop)
   document.removeEventListener('touchcancel', onDragStop)
+}
+
+function onDragStop() {
+  removeDragListeners()
 
   if (target) {
     target.style.transform = ''
@@ -396,14 +421,17 @@ function onDragStop() {
     return
   }
 
-  items.value = initialIndex.value != currentIndex.value
+  // The model only updates after the parent re-renders, so keep a reference to the new list.
+  const value = initialIndex.value != currentIndex.value
     ? moveArrayElement(items.value, initialIndex.value, currentIndex.value)
     : items.value
+
+  items.value = value
 
   emits('end', {
     oldIndex: initialIndex.value,
     newIndex: currentIndex.value,
-    value: items.value
+    value
   })
 
   initialIndex.value = null
@@ -411,6 +439,12 @@ function onDragStop() {
   dragDirection.value = null
   isDragging.value = false
   wasDragging.value = true
+
+  // The click following this drag, if any, is dispatched before this timeout. There may
+  // be none (released outside of the item, touch events), so the flag can't outlive it.
+  setTimeout(() => {
+    wasDragging.value = false
+  })
 }
 
 function onItemClick(event) {
@@ -423,7 +457,6 @@ function onItemClick(event) {
 }
 
 function moveTarget() {
-  const targetSize = target[sizeKey.value]
   const scroll = sortableRef.value[scrollKey.value]
   const coordinate = position.value[positionKey.value]
 
@@ -437,9 +470,9 @@ function moveTarget() {
 
   const clampedCoordinate = clamp(coordinate - targetDragOffset.value, minCoordinate, maxCoordinate)
 
-  currentIndex.value = Math.floor(coordinate / targetSize)
+  currentIndex.value = clamp(Math.floor(coordinate / targetSize), 0, items.value.length - 1)
 
-  const transform = clampedCoordinate - targetSize * initialIndex.value
+  const transform = clampedCoordinate - targetStart
   const transformX = isVertical.value ? 0 : transform
   const transformY = isVertical.value ? transform : 0
   target.style.transform = `translate3d(${transformX}px, ${transformY}px, 0)`
@@ -466,7 +499,6 @@ function animateAutoScroll(timestamp) {
 }
 
 function autoScroll() {
-  const targetSize = target[sizeKey.value]
   const coordinate = position.value[positionKey.value]
   const relativeCoordinate = coordinate - sortableRef.value[scrollKey.value]
   const relativeCoordinateStart = relativeCoordinate - targetDragOffset.value
@@ -512,6 +544,7 @@ function autoScroll() {
 }
 
 onUnmounted(() => {
+  removeDragListeners()
   cancelAnimationFrame(autoScrollAnimationRequest)
 })
 </script>

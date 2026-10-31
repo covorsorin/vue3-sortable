@@ -25,6 +25,10 @@ export function hasClassUpToParent(element, parent, className) {
     return false
 }
 
+export function isEditableElement(element) {
+    return !!element.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')
+}
+
 export function getElementBounds(element, parent) {
     const elementRect = element.getBoundingClientRect()
     const parentRect = parent.getBoundingClientRect()
